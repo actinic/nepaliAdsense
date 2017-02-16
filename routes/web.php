@@ -1,0 +1,69 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+Route::group(['middleware' => 'web'], function () {
+
+	Route::get('/',[
+		'uses'=> '\App\Http\Controllers\HomeController@index',
+		'as'=>'home'
+		]);
+
+	Route::post('/signup',[
+		'uses'=> '\App\Http\Controllers\HomeController@postSubmit',
+		'as'=>'auth.proceed',
+		'middleware' => 'guest'
+		]);
+	Route::post('/signin',[
+		'uses'=> '\App\Http\Controllers\HomeController@postSubmit',
+		'as'=>'auth.proceed',
+		'middleware' => 'guest'
+		]);
+
+	Route::get('/view/{app_id}/{dev_id}',[
+		'uses'=> '\App\Http\Controllers\AdController@getView',
+		'as'=>'ad.demo',
+		'attempt'=>'10'
+	]);
+
+	Route::get('/click/{app_id}/{dev_id}/',[
+		'uses'=> '\App\Http\Controllers\AdController@getClick',
+		'as'=>'ad.demo',
+	]);
+
+	Route::get('/signout',[
+		'uses' => '\App\Http\Controllers\AuthController@getSignOut',
+		'as' => 'auth.signout'
+	]);
+
+	Route::get('/advertiser/newad',[
+		'uses'=>'\App\Http\Controllers\AdController@getAdvertiser',
+		'as'=> 'ad.advertise',
+		'middleware' => 'auth'
+		]);
+
+
+	Route::post('/advertiser/newad',[
+		'uses'=>'\App\Http\Controllers\AdController@postAdvertiser',
+		'middleware' => 'auth'
+		]);
+
+	Route::get('/developer/newapp',[
+		'uses'=>'\App\Http\Controllers\AppController@getNewApp',
+		'as'=> 'app.new',
+		'middleware' => 'auth'
+		]);
+	Route::post('/developer/newapp',[
+		'uses'=>'\App\Http\Controllers\AppController@postNewApp',
+		'middleware' => 'auth'
+		]);
+
+});
